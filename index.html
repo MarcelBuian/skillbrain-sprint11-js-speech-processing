@@ -11,20 +11,34 @@
     <title>Joke Teller</title>
     <link rel="stylesheet" href="./assets/style.css">
     <link href="./libraries/toastr.min.css" rel="stylesheet" />
+    <link href="./libraries/bulma.css" rel="stylesheet" />
 
     <script src="./libraries/voicerss-tts.min.js"></script>
     <script src="./libraries/jquery-3.6.3.min.js"></script>
     <script src="./libraries/toastr.min.js"></script>
     <script type="text/javascript" src="./assets/app.js"></script>
+
 </head>
 
 <body>
     <div class="container">
-        <button id="joke-button">Tell a me a joke!</button>
+        <div class="buttons">
+            <button id="joke-button" class="button is-success is-rounded">
+                Tell a me a joke!
+            </button>
+        </div>
+
         <audio id="audio" controls hidden></audio>
-        <div id="joke-question" class="speech-bubble">Hello!</div>
-        <div id="joke-answer"></div>
-        
+
+        <article class="message is-warning">
+            <div class="message-header">
+                <p id="joke-question">Joke title</p>
+            </div>
+            <div class="message-body" id="joke-answer">
+                Joke body
+            </div>
+        </article>
+
     </div>
 
 </body>

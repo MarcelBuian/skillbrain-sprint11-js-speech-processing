@@ -23,7 +23,7 @@ const speak = (message) => {
         key: "52bfbd75e1c24955831329926a53c5ed",
         src: message,
         hl: "en-us",
-        v: "Linda",
+        v: "Nancy",
         r: 0,
         c: "mp3",
         f: "44khz_16bit_stereo",
@@ -31,34 +31,45 @@ const speak = (message) => {
     });
 };
 
-const jokeClickListener = () => {
-    // toastr.info("Joke is coming...");
-    const joke = "Hello World!";
-    // speak(joke);
-
-    const apiUrl = "https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,racist,sexist,explicit&type=twopart&amount=2";
+const doRequest = (apiUrl, successCallback) => {
     const requestOptions = {};
 
     fetch(apiUrl, requestOptions)
         .then((response) => {
             if (!response.ok) {
-                throw new Error("Network response was not ok");
+                const err = "Network response was not ok";
+                throw new Error(err);
+                toastr.error(err);
             }
             return response.json();
         })
         .then((data) => {
-            // console.log(data);
-            const jokeQuestion = data.jokes[0].setup;
-            // console.log(jokeQuestion);
-            const jokeAnswer = data.jokes[0].delivery;
-            // console.log(jokeAnswer);
-            toastr["success"](jokeAnswer, jokeQuestion);
-            // document.getElementById
+            successCallback(data);
         })
         .catch((error) => {
             console.error("Error:", error);
             toastr.error("Error: " + error);
         });
+}
+
+const jokeClickListener = () => {
+    const apiUrl = "https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,racist,sexist,explicit&type=twopart&amount=2";
+
+    doRequest(apiUrl, (data) => {
+        const jokeQuestion = data.jokes[0].setup;
+        const jokeAnswer = data.jokes[0].delivery;
+        toastr["success"](jokeAnswer, jokeQuestion);
+        document.getElementById('joke-question').innerText = jokeQuestion;
+        document.getElementById('joke-answer').innerText = jokeAnswer;
+
+        const jokeBtn = document.getElementById('joke-button');
+        jokeBtn.classList.add('is-loading');
+        setTimeout(() => {
+            jokeBtn.classList.remove('is-loading');
+        }, 5000);
+
+        // speak(jokeQuestion + ' ' + jokeAnswer);
+    });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
